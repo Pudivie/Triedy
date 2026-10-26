@@ -5,76 +5,58 @@ class Program
     static void Main(string[] args)
     {
         Console.WriteLine("Morituri te salutant.");
-        Hrdina nasPrvyHrdina = new Hrdina();
-        nasPrvyHrdina.Meno = "Arhtas";
-        nasPrvyHrdina.Zdravie = 50;
-        nasPrvyHrdina.Energia = 150;
-
-        Hrdina nasDruhyHrdina = new Hrdina();
-        nasDruhyHrdina.Meno = "Ilidan";
-        nasDruhyHrdina.Zdravie = 45;
-        nasDruhyHrdina.Energia = 100;
-
-        Random randomizer = new Random();
-        int silaUtoku = randomizer.Next(10,30);
+        Hrdina nasPrvyHrdina = new Hrdina("Arthas", 150, 50); // nova instancia triedy hrdina
+        Hrdina nasDruhyHrdina = new Hrdina("Illidan", 150, 50);
         
-        while (!(nasPrvyHrdina.Zdravie == 0 || nasDruhyHrdina.Zdravie == 0))
+        Hrdina prvy = nasPrvyHrdina;
+        Hrdina druhy = nasDruhyHrdina;
+        do
         {
-            nasPrvyHrdina.Regeneruj();
-            nasDruhyHrdina.Regeneruj();
-            
-            bool podarilSaUtok = nasPrvyHrdina.Utok(silaUtoku);
-            if (podarilSaUtok)
-            {
-                nasDruhyHrdina.PrijmiZranenie(silaUtoku);
-                Console.WriteLine(nasPrvyHrdina.Meno + " Trafil");
-                Console.WriteLine(nasDruhyHrdina.Meno + " ma uz len "+ nasDruhyHrdina.Zdravie +" zdravia.");
-            }
-            else
-            {
-                Console.WriteLine(nasPrvyHrdina.Meno +" je unaveny");
-            }
-            
-            podarilSaUtok = nasDruhyHrdina.Utok(silaUtoku);
-            if (podarilSaUtok)
-            {
-                Console.WriteLine(nasDruhyHrdina.Meno + " Trafil");
-                nasPrvyHrdina.PrijmiZranenie(silaUtoku);
-                Console.WriteLine(nasPrvyHrdina.Meno + " ma uz len "+ nasPrvyHrdina.Zdravie +" zdravia.");
+            prvy.Regeneruj(); // nemal by sa regenerovat pred zapasom (mal by o 5 naviac)
+            druhy.Regeneruj();
+            bool podarilSaUtok = prvy.Utok(druhy); // cena utoku = sila utoku
+            Hrdina virtualny = prvy; // vymena hrdinov cez tretiu premennu
+            prvy = druhy;
+            druhy = virtualny;
+        } while (!(prvy.zdravie() == 0 || druhy.zdravie() == 0));
 
-            }
-            else
-            {
-                Console.WriteLine(nasDruhyHrdina.Meno +" je unaveny");
-            }
-        }
-
-        if (nasDruhyHrdina.Zdravie == 0 && nasPrvyHrdina.Zdravie == 0)
+        if (nasDruhyHrdina.zdravie() == 0 && nasPrvyHrdina.zdravie() == 0)
         {
             Console.WriteLine("Remiza!");
         }
-        else if(nasPrvyHrdina.Zdravie == 0)
+        else if(nasPrvyHrdina.zdravie() == 0)
         {
-            Console.WriteLine("Vyhral "+nasDruhyHrdina.Meno);
+            Console.WriteLine("Vyhral "+nasDruhyHrdina.meno());
         }
-        else if (nasDruhyHrdina.Zdravie == 0)
+        else if (nasDruhyHrdina.zdravie() == 0)
         {
-            Console.WriteLine("Vyhral "+nasPrvyHrdina.Meno);
+            Console.WriteLine("Vyhral "+nasPrvyHrdina.meno());
         }
-
-
     }
 }
 
 class Hrdina
 {
-    public string Meno = "";
-    public int Zdravie = 100;
-    public int Energia = 50;
+    string Meno;
+    int Zdravie;
+    int Energia;
+    int MaxEnergia;
+    static Random randomizer = new Random();
+
+    public Hrdina(string m, int z, int e)
+    {
+        Meno = m;
+        Zdravie = z;
+        MaxEnergia = Energia = e;
+    }
 
     public void Regeneruj()
     {
         Energia = Energia + 5;
+        if (Energia > MaxEnergia)
+        {
+            Energia = MaxEnergia;
+        }
     }
 
     public int PrijmiZranenie(int sila)
@@ -84,28 +66,63 @@ class Hrdina
         {
             Zdravie = 0;
         }
-
+        Console.WriteLine(meno() + " ma uz len " + zdravie() + " zdravia.");
         return Zdravie;
     }
 
-    public bool Utok(int cenaUtoku)
+    public bool Utok(Hrdina druhy)
     {
-        if (Energia < cenaUtoku)
+        int silaUtoku = randomizer.Next(10,30);
+        bool podarilSaUtok = Energia >= silaUtoku;
+        if (! podarilSaUtok)
         {
+            Console.WriteLine(meno() + " je unaveny");
             return false;
         }
-        else
-        {
-            Energia = Energia - cenaUtoku;
-            return true;
-        }
+        Energia = Energia - silaUtoku;
+        
+        Console.WriteLine(meno() + " Trafil");
+        druhy.PrijmiZranenie(silaUtoku);
+        return podarilSaUtok;
+    }
 
+    // fluent api methods
+    public Hrdina meno(string m)
+    {
+        Meno = m;
+        return this;
+    }
+
+    public string meno()
+    {
+        return Meno;
+    }
+    
+    public Hrdina energia(int e)
+    {
+        Energia = e;
+        return this;
+    }
+    public int energia()
+    {
+        return Energia;
+    }
+    
+    public Hrdina zdravie(int z)
+    {
+        Zdravie = z;
+        return this;
+    }
+    
+    public int zdravie()
+    {
+        return Zdravie;
     }
 
     public void VypisAktualnyStav()
     {
-        Console.WriteLine("Meno: "+Meno);
-        Console.WriteLine("Zdravie: "+Zdravie);
-        Console.WriteLine("Energia: "+Energia);
+        Console.WriteLine("Meno: " + Meno);
+        Console.WriteLine("Zdravie: " + Zdravie);
+        Console.WriteLine("Energia: " + Energia);
     }
 }
