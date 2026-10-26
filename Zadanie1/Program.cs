@@ -6,12 +6,12 @@ class Program
     {
         Console.WriteLine("Morituri te salutant.");
         Hrdina nasPrvyHrdina = new Hrdina();
-        nasPrvyHrdina.Meno = "Iron-man";
+        nasPrvyHrdina.Meno = "Arhtas";
         nasPrvyHrdina.Zdravie = 50;
         nasPrvyHrdina.Energia = 150;
 
         Hrdina nasDruhyHrdina = new Hrdina();
-        nasDruhyHrdina.Meno = "Augustin";
+        nasDruhyHrdina.Meno = "Ilidan";
         nasDruhyHrdina.Zdravie = 45;
         nasDruhyHrdina.Energia = 100;
 
