@@ -1,25 +1,10 @@
-﻿namespace Triedy2;
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        Console.WriteLine("Cauko opicka, zadaj si co chces spravit.");
-        Console.Write("> ");
-        Console.ReadLine();
-        
-        
-        Ucet grullovUcet = new Ucet("SK98258439", "Grull");
-        Ucet magtheridonovUcet = new Ucet("SK765893038", "Magtherigon");
-       
-    }
-}
+﻿namespace Triedy1;
 
 class Ucet
 {
-    public string cisloUctu;
-    public double zostatok = 0;
-    public string majitel;
+    private string cisloUctu;
+    private double zostatok = 0;
+    private string majitel;
 
     public Ucet(string cisloUctu, string majitel)
     {
@@ -27,9 +12,9 @@ class Ucet
         this.majitel = majitel;
     }
 
-    public int Pohyb(int mnozstvo)
+    public double Pohyb(double mnozstvo)
     {
-        if (zostatok + mnozstvo > 0)
+        if (zostatok + mnozstvo >= 0)
         {
             zostatok += mnozstvo;
         }
@@ -37,10 +22,11 @@ class Ucet
         return zostatok;
     }
 
-    public int VlozPeniaze(int mnozstvo)
+    public double VlozPeniaze(double mnozstvo)
     {
         if (mnozstvo > 0)
         {
+            Console.WriteLine("\nUspesny vklad "+mnozstvo+" na ucet "+cisloUctu);
             return Pohyb(mnozstvo);
         }
         else
@@ -49,37 +35,55 @@ class Ucet
         }
     }
 
-    public bool VyberPeniaze(int mnozstvo)
+    public bool VyberPeniaze(double mnozstvo)
     {
-        if (mnozstvo < 1)
+        if (mnozstvo <= 0)
         {
             return false;
         }
 
-        int m = mnozstvo;
-        int r = Pohyb(-mnozstvo);
-        return m != r;
+        double m = mnozstvo;
+        double r = Pohyb(- mnozstvo);
+        bool result = m != r;
+        if (result)
+        {
+            Console.WriteLine("\nUspesny vyber "+mnozstvo+" z uctu "+cisloUctu);
+        }
+        return result;
     }
+    
     
     public void aktualnyStav()
     {
-        Console.WriteLine("Majitel: " + majitel);
+        Console.WriteLine("\nMajitel: " + majitel);
         Console.WriteLine("Cislo uctu: " + cisloUctu);
         Console.WriteLine("Zostatok na ucte: " + zostatok);
     }
-
-    public double VlozPeniaze(double zostatokNaUcte)
+    
+    static void Main(string[] args)
     {
-        double scitanyZostatok = zostatokNaUcte + 10;
-        if (scitanyZostatok > 0)
-        {
-            Console.WriteLine("Peniaze boli vlozene na vas ucet.");
-        }
-        else
-        {
-            Console.WriteLine("Chcete pridat zapornu hodnotu? nie. Tak nacu ju tam zadavate?");
-        }
+        Ucet grullovUcet = new Ucet("SK98258439", "Grull");
+        grullovUcet.Pohyb(100);
+        Ucet magtheridonovUcet = new Ucet("SK765893038", "Magtheridon");
+        magtheridonovUcet.Pohyb(150);
+        grullovUcet.VlozPeniaze(100);
+        grullovUcet.aktualnyStav();
+        grullovUcet.VyberPeniaze(180);
+        grullovUcet.aktualnyStav();
+        grullovUcet.VyberPeniaze(50);
+        grullovUcet.aktualnyStav();
+        grullovUcet.VyberPeniaze(-5);
+        grullovUcet.aktualnyStav();
 
-        return scitanyZostatok;
+        magtheridonovUcet.VlozPeniaze(-10);
+        magtheridonovUcet.aktualnyStav();
+        magtheridonovUcet.VlozPeniaze(100);
+        magtheridonovUcet.aktualnyStav();
+        magtheridonovUcet.VyberPeniaze(180);
+        magtheridonovUcet.aktualnyStav();
+        magtheridonovUcet.VyberPeniaze(70);
+        magtheridonovUcet.aktualnyStav();
+        magtheridonovUcet.VyberPeniaze(-5);
+        magtheridonovUcet.aktualnyStav();
     }
 }
