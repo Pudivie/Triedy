@@ -20,18 +20,13 @@ class Program
             druhy = virtualny;
         } while (!(prvy.zdravie() == 0 || druhy.zdravie() == 0));
 
-        if (nasDruhyHrdina.zdravie() == 0 && nasPrvyHrdina.zdravie() == 0)
+        /*
+         // pri tahovej hre toto nie je mozne >>
+         if (nasDruhyHrdina.zdravie() == 0 && nasPrvyHrdina.zdravie() == 0)
         {
-            Console.WriteLine("Remiza!");
+            Console.WriteLine("Remiza!"); 
         }
-        else if(nasPrvyHrdina.zdravie() == 0)
-        {
-            Console.WriteLine("Vyhral "+nasDruhyHrdina.meno());
-        }
-        else if (nasDruhyHrdina.zdravie() == 0)
-        {
-            Console.WriteLine("Vyhral "+nasPrvyHrdina.meno());
-        }
+        else*/
     }
 }
 
@@ -57,16 +52,21 @@ class Hrdina
         {
             Energia = MaxEnergia;
         }
+        Console.WriteLine(meno()+" ma "+energia()+" energie.");
     }
 
-    public int PrijmiZranenie(int sila)
+    public int PrijmiZranenie(Hrdina utocnik, int sila)
     {
         Zdravie = Zdravie - sila;
         if (Zdravie < 0)
         {
             Zdravie = 0;
+            Console.WriteLine("Vyhral "+utocnik.meno()+". "+meno()+" zomrel.");
         }
-        Console.WriteLine(meno() + " ma uz len " + zdravie() + " zdravia.");
+        else
+        {
+            Console.WriteLine(meno() + " ma uz len " + zdravie() + " zdravia.");   
+        }
         return Zdravie;
     }
 
@@ -81,13 +81,13 @@ class Hrdina
         }
         Energia = Energia - silaUtoku;
         
-        Console.WriteLine(meno() + " Trafil");
-        druhy.PrijmiZranenie(silaUtoku);
+        Console.WriteLine(meno() + " Trafil za "+silaUtoku);
+        druhy.PrijmiZranenie(this, silaUtoku);
         return podarilSaUtok;
     }
 
     // fluent api methods
-    public Hrdina meno(string m)
+    private Hrdina meno(string m)
     {
         Meno = m;
         return this;
@@ -98,7 +98,7 @@ class Hrdina
         return Meno;
     }
     
-    public Hrdina energia(int e)
+    private Hrdina energia(int e)
     {
         Energia = e;
         return this;
@@ -108,7 +108,7 @@ class Hrdina
         return Energia;
     }
     
-    public Hrdina zdravie(int z)
+    private Hrdina zdravie(int z)
     {
         Zdravie = z;
         return this;
