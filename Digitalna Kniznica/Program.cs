@@ -18,7 +18,16 @@ public class Author
     }
 
     List<Author> Authors = new List<Author>();
-    public Author AddAuthor()
+    public Author AddAuthor(string authorName)
+    {
+        Author a = new Author(_Name);
+        Authors.Add(a);
+        return a;
+    }
+    public bool AddAuthors(Authors a)
+    {
+        return Books.Add(a);
+    }
     
     public string Name()
     {
@@ -109,6 +118,14 @@ class Library
         Console.WriteLine("Name a book's name, the author, and the year of publication: ");
         string bn = Console.ReadLine();
         int bpy = int.Parse(Console.ReadLine());
+        string an = Console.ReadLine();
+
+        Book AddBook()
+        {
+            Author na = new Author(an);
+            Book nb = na.WriteBook(bn, bpy);
+            return AddBook();
+        }
         
         // hladanie autora
         Author aFound = lib.FindAuthor("JrrTolkien");
